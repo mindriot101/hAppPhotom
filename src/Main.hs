@@ -6,12 +6,14 @@ data Pixel = Pixel {
                     y :: Float,
                     value :: Float
                     } deriving (Show)
+data Aperture = Aperture {
+                    xAp :: Float,
+                    yAp :: Float,
+                    radius :: Float
+                    } deriving (Show)
+                    
+type ApertureList = [Aperture]
 type Image = [Pixel]
-
-sourceFilename :: IO String
-sourceFilename = do
-    args <- getArgs
-    return $ head args
 
 wordsWhen :: (Char -> Bool) -> String -> [String]
 wordsWhen p s = case dropWhile p s of
@@ -27,14 +29,30 @@ getFileLines f = do
 readImage :: FilePath -> IO Image
 readImage f = do
     text <- getFileLines f
-    return $ map parseLine text
+    return $ map parseImageLine text
 
-parseLine :: String -> Pixel
-parseLine s = Pixel { x=x, y=y, value=value }
+parseImageLine :: String -> Pixel
+parseImageLine s = Pixel { x=x, y=y, value=value }
     where [x, y, value] = map read $ words s
 
-performAperturePhotometry :: Image -> IO ()
-performAperturePhotometry image = undefined
+performAperturePhotometry :: Image -> ApertureList -> IO ()
+performAperturePhotometry image apertures = undefined
+
+readApertures :: FilePath -> IO ApertureList
+readApertures f = do
+    text <- getFileLines f
+    return $ map parseApertureLine text
+
+parseApertureLine :: String -> Aperture
+parseApertureLine s = Aperture { xAp = x, yAp = y, radius=radius }
+    where [x, y, radius] = map read $ words s
 
 main :: IO ()
-main = sourceFilename >>= readImage >>= performAperturePhotometry
+main = do
+    args <- getArgs
+    case args of
+        [sourceFilename, apertureList] -> do
+            image <- readImage sourceFilename
+            apertures <- readApertures apertureList
+            performAperturePhotometry image apertures
+        _ -> error "Program usage: hAppPhotom <image> <aperturelist>"
