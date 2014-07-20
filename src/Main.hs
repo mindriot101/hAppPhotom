@@ -1,6 +1,11 @@
 import System.Environment
 
-main :: IO ()
-main = getArgs >>= print . happphotom . head
+sourceFilename :: IO String
+sourceFilename = do
+    args <- getArgs
+    return $ head args
 
-happphotom s = "Photometry " ++ s
+main :: IO ()
+main = do
+    fname <- sourceFilename
+    return ()
