@@ -14,6 +14,7 @@ data Aperture = Aperture {
                     
 type ApertureList = [Aperture]
 type Image = [Pixel]
+type Flux = Float
 
 wordsWhen :: (Char -> Bool) -> String -> [String]
 wordsWhen p s = case dropWhile p s of
@@ -36,7 +37,12 @@ parseImageLine s = Pixel { x=x, y=y, value=value }
     where [x, y, value] = map read $ words s
 
 performAperturePhotometry :: Image -> ApertureList -> IO ()
-performAperturePhotometry image apertures = undefined
+performAperturePhotometry image apertures = do
+    let fluxes = map (extractFlux image) apertures
+    return ()
+
+extractFlux :: Image -> Aperture -> Flux
+extractFlux = undefined
 
 readApertures :: FilePath -> IO ApertureList
 readApertures f = do
