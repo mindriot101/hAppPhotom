@@ -26,10 +26,15 @@ getFileLines f = do
 
 readImage :: FilePath -> IO Image
 readImage f = do
-    text <- getFileLines sourcename
+    text <- getFileLines f
+    return $ map parseLine text
 
+parseLine :: String -> Pixel
+parseLine s = Pixel { x=x, y=y, value=value }
+    where [x, y, value] = map read $ words s
+
+performAperturePhotometry :: Image -> IO ()
+performAperturePhotometry image = undefined
 
 main :: IO ()
-main = do
-    fname <- sourceFilename
-    return ()
+main = sourceFilename >>= readImage >>= performAperturePhotometry
